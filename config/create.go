@@ -43,7 +43,7 @@ func create() {
 	nick := getNick()
 	servers := getServers()
 
-	conf := config{
+	conf := Config{
 		Nick:    nick,
 		Servers: servers,
 	}

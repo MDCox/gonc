@@ -12,12 +12,12 @@ import (
 	"io/ioutil"
 )
 
-type config struct {
+type Config struct {
 	Nick    string   `json:"nick"`
 	Servers []string `json:"servers"`
 }
 
-func Import(filePath ...string) config {
+func Import(filePath ...string) Config {
 	loadedJSON, err := ioutil.ReadFile("./conf.json")
 	if err != nil {
 		fmt.Printf("err loading conf: %s\n", err)
@@ -25,7 +25,7 @@ func Import(filePath ...string) config {
 		loadedJSON, err = ioutil.ReadFile("./conf.json")
 	}
 
-	loadedConf := config{}
+	loadedConf := Config{}
 	err = json.Unmarshal(loadedJSON, &loadedConf)
 	if err != nil {
 		fmt.Printf("err mapping JSON to config: %s\n", err)
