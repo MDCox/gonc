@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"net/textproto"
 	"os"
 	"time"
 
@@ -28,18 +26,5 @@ func main() {
 	splashScreen(args)
 
 	conf := config.Import()
-	conn := irc.Connect(conf)
-	socket := conn.Socket
-	defer socket.Close()
-
-	reader := bufio.NewReader(socket)
-	tp := textproto.NewReader(reader)
-	for {
-		line, err := tp.ReadLine()
-		if err != nil {
-			fmt.Printf("%s\n", err)
-			break
-		}
-		fmt.Printf("%s\n", line)
-	}
+	irc.Connect(conf)
 }
