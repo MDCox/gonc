@@ -24,5 +24,6 @@ func main() {
 	args := os.Args[1:]
 	splashScreen(args)
 
-	config.Import()
+	conf := config.Import()
+	fmt.Printf("%s", conf)
 }

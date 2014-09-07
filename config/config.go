@@ -17,7 +17,7 @@ type config struct {
 	Servers []string `json:"servers"`
 }
 
-func Import(filePath ...string) (config, error) {
+func Import(filePath ...string) config {
 	loadedJSON, err := ioutil.ReadFile("./conf.json")
 	if err != nil {
 		fmt.Printf("err loading conf: %s\n", err)
@@ -31,5 +31,5 @@ func Import(filePath ...string) (config, error) {
 		fmt.Printf("err mapping JSON to config: %s\n", err)
 	}
 
-	return loadedConf, err
+	return loadedConf
 }

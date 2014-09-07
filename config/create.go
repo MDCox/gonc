@@ -9,7 +9,7 @@ import (
 func getNick() string {
 	var nick string
 
-	fmt.Println("nick:\n")
+	fmt.Println("nick:")
 	fmt.Scanf("%s", &nick)
 
 	return nick
@@ -21,12 +21,12 @@ func getServers() []string {
 	var response string
 
 	for {
-		fmt.Println("Add a server?")
+		fmt.Println("Add server? (y/n)")
 		fmt.Scanf("%s", &response)
 		if response == "n" {
 			break
 		}
-		fmt.Println("What is the server url?")
+		fmt.Println("server url:")
 		fmt.Scanf("%s", &server)
 		servers = append(servers, server)
 	}
