@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"./config"
 )
 
 func splashScreen(args []string) {
@@ -21,4 +23,6 @@ func splashScreen(args []string) {
 func main() {
 	args := os.Args[1:]
 	splashScreen(args)
+
+	config.Import()
 }
