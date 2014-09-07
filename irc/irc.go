@@ -2,7 +2,10 @@
 
 package irc
 
-import "net"
+import (
+	"fmt"
+	"net"
+)
 
 type Connection struct {
 	// User information
@@ -15,6 +18,16 @@ type Connection struct {
 
 	// Events
 	events []Event
+}
+
+func (conn *Connection) Connect() net.Conn {
+	socket, err := net.Dial("tcp", conn.server)
+	if err != nil {
+		fmt.Printf("%s", err)
+		return nil
+	}
+	conn.socket = socket
+	return conn.socket
 }
 
 type Event struct {
