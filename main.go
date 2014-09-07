@@ -7,6 +7,7 @@ import (
 
 	"./config"
 	"./irc"
+	"./server"
 )
 
 func splashScreen(args []string) {
@@ -24,8 +25,9 @@ func splashScreen(args []string) {
 func main() {
 	args := os.Args[1:]
 	splashScreen(args)
-
 	conf := config.Import()
+
+	server.Listen()
 	for _, server := range conf.Servers {
 		go irc.Connect(conf, server)
 	}
