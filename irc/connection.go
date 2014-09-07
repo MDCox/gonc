@@ -22,8 +22,8 @@ type Connection struct {
 
 func (conn *Connection) Connect() {
 	socket, err := net.Dial("tcp", conn.Server)
-	conn.Socket = socket
 	defer socket.Close()
+	conn.Socket = socket
 	if err != nil {
 		fmt.Printf("%s", err)
 		return

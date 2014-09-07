@@ -26,5 +26,10 @@ func main() {
 	splashScreen(args)
 
 	conf := config.Import()
-	irc.Connect(conf)
+	for _, server := range conf.Servers {
+		go irc.Connect(conf, server)
+	}
+
+	// Don't end
+	select {}
 }

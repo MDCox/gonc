@@ -4,12 +4,12 @@ package irc
 
 import "../config"
 
-func Connect(conf config.Config) Connection {
+func Connect(conf config.Config, server string) Connection {
 	conn := Connection{
 		Nick: conf.Nick,
 		User: conf.Nick,
 
-		Server: conf.Servers[0],
+		Server: server,
 		Socket: nil,
 
 		Events: nil,
