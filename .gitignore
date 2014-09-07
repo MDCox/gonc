@@ -24,3 +24,7 @@ _testmain.go
 
 # Vim swp files
 *.swp
+
+# Built gonc and config files
+gonc
+config.json
