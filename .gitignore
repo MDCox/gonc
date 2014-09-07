@@ -27,4 +27,4 @@ _testmain.go
 
 # Built gonc and config files
 gonc
-config.json
+conf.json
