@@ -8,21 +8,21 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 )
 
 type config struct {
-	nick    string   `json:"nick"`
-	servers []string `json:"servers"`
+	Nick    string   `json:"nick"`
+	Servers []string `json:"servers"`
 }
 
 func Import(filePath ...string) (config, error) {
 	loadedJSON, err := ioutil.ReadFile("./conf.json")
 	if err != nil {
 		fmt.Printf("err loading conf: %s\n", err)
-		return config{}, errors.New("No config")
+		create()
+		loadedJSON, err = ioutil.ReadFile("./conf.json")
 	}
 
 	loadedConf := config{}
