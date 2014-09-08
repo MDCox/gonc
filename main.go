@@ -27,7 +27,7 @@ func main() {
 	splashScreen(args)
 	conf := config.Import()
 
-	server.Listen()
+	go server.Listen()
 	for _, server := range conf.Servers {
 		go irc.Connect(conf, server)
 	}
