@@ -51,9 +51,17 @@ func (conn *Connection) Listen() {
 	for {
 		line, err := tp.ReadLine()
 		if err != nil {
-			fmt.Printf("%s\n", err)
+			fmt.Println(err)
 			break
 		}
+		conn.respondToMessage(line)
 		fmt.Printf("%s\n", line)
+	}
+}
+
+func (conn *Connection) respondToMessage(line string) {
+	socket := conn.Socket
+	if line[0:4] == "PING" {
+		fmt.Fprintf(socket, "PONG %s\r\n", line[5:])
 	}
 }
