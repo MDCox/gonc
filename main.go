@@ -24,14 +24,25 @@ func splashScreen(args []string) {
 
 func main() {
 	args := os.Args[1:]
-	splashScreen(args)
 	conf := config.Import()
 
-	go server.Listen()
+	// Channels to communicate between client and server
+	clientToServer := make(chan []byte)
+	serverToClient := make(chan []byte)
+
+	splashScreen(args)
+
+	go server.Listen(clientToServer)
 	for _, server := range conf.Servers {
-		go irc.Connect(conf, server)
+		go irc.Connect(conf, server, serverToClient)
 	}
 
-	// Don't end
-	select {}
+	for {
+		select {
+		case msgFromServer := <-serverToClient:
+			fmt.Printf("%s\n", msgFromServer)
+		case msgFromClient := <-clientToServer:
+			fmt.Println("%s\n", msgFromClient)
+		}
+	}
 }

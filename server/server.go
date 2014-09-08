@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func Listen() {
+func Listen(clientToServer chan []byte) {
 	ln, err := net.Listen("tcp", ":6665")
 	if err != nil {
 		fmt.Println(err)
@@ -17,18 +17,16 @@ func Listen() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		go requestHandler(conn)
+		go requestHandler(conn, clientToServer)
 	}
 }
 
-func requestHandler(conn net.Conn) {
+func requestHandler(conn net.Conn, clientToServer chan []byte) {
 	buf := []byte{}
-	reqLen, err := conn.Read(buf)
+	_, err := conn.Read(buf)
 	if err != nil {
 		fmt.Println(err)
 	}
-	conn.Write([]byte("message received"))
-	fmt.Println(reqLen)
-	fmt.Println(buf)
+	clientToServer <- buf
 	conn.Close()
 }
