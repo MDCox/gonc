@@ -4,6 +4,7 @@ gonc
 An easy to use and extendable IRC bouncer
 
 *Still a work in progress*
+
 Currently it can connect to multiple irc servers and channels, as well as accept client connections.
 The client and servers do not talk to eachother yet though, which makes it more like the world's most mute bot than a bouncer.
 
