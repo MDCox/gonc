@@ -26,23 +26,14 @@ func main() {
 	args := os.Args[1:]
 	conf := config.Import()
 
-	// Channels to communicate between client and server
-	clientToServer := make(chan []byte)
-	serverToClient := make(chan []byte)
-
 	splashScreen(args)
 
-	go server.Listen(clientToServer)
+	client := server.Listen()
+	var servers []irc.Connection
 	for _, server := range conf.Servers {
-		go irc.Connect(conf, server, serverToClient)
+		connection := irc.Connect(conf, server)
+		servers = append(servers, connection)
 	}
 
-	for {
-		select {
-		case msgFromServer := <-serverToClient:
-			fmt.Printf("%s\n", msgFromServer)
-		case msgFromClient := <-clientToServer:
-			fmt.Println("%s\n", msgFromClient)
-		}
-	}
+	relay(client, servers)
 }

@@ -6,27 +6,36 @@ import (
 	"os"
 )
 
-func Listen(clientToServer chan []byte) {
+type Client struct {
+	Chan chan []byte
+}
+
+func Listen() Client {
+	client := Client{Chan: make(chan []byte)}
+
 	ln, err := net.Listen("tcp", ":6665")
 	if err != nil {
 		fmt.Println(err)
 	}
-	for {
-		conn, err := ln.Accept()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+	go func() {
+		for {
+			conn, err := ln.Accept()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			go requestHandler(conn, client)
 		}
-		go requestHandler(conn, clientToServer)
-	}
+	}()
+	return client
 }
 
-func requestHandler(conn net.Conn, clientToServer chan []byte) {
+func requestHandler(conn net.Conn, client Client) {
 	buf := []byte{}
 	_, err := conn.Read(buf)
 	if err != nil {
 		fmt.Println(err)
 	}
-	clientToServer <- buf
+	client.Chan <- buf
 	conn.Close()
 }

@@ -16,11 +16,11 @@ type Connection struct {
 	Server string
 	Socket net.Conn
 
-	// Events
 	Events []Event
+	Chan   chan []byte
 }
 
-func (conn *Connection) Connect(c chan []byte) {
+func (conn *Connection) Connect() {
 	socket, err := net.Dial("tcp", conn.Server)
 	defer socket.Close()
 	conn.Socket = socket
@@ -30,7 +30,7 @@ func (conn *Connection) Connect(c chan []byte) {
 	}
 
 	conn.SetNick()
-	conn.Listen(c)
+	conn.Listen()
 }
 
 func (conn *Connection) SetNick() {
@@ -44,7 +44,7 @@ func (conn *Connection) JoinChan(channel string) {
 	fmt.Fprintf(socket, "JOIN %s\r\n", channel)
 }
 
-func (conn *Connection) Listen(c chan []byte) {
+func (conn *Connection) Listen() {
 	socket := conn.Socket
 	reader := bufio.NewReader(socket)
 	tp := textproto.NewReader(reader)
@@ -55,7 +55,7 @@ func (conn *Connection) Listen(c chan []byte) {
 			break
 		}
 		conn.respondToMessage(line)
-		c <- []byte(line)
+		conn.Chan <- []byte(line)
 	}
 }
 
