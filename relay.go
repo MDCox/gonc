@@ -1,27 +1,23 @@
 package main
 
 import (
-	"reflect"
+	"fmt"
 
+	"./client"
 	"./irc"
-	"./server"
 )
 
 // Relays information between clients and servers using channels
-func relay(client server.Client, servers []irc.Connection) {
-	// Uses reflection to create a select case for each connected server.
-	cases := make([]reflect.SelectCase, len(servers))
-	for i, server := range servers {
-		cases[i] = reflect.SelectCase{
-			Dir:  reflect.SelectSend,
-			Chan: reflect.ValueOf(server.Chan),
+func relay(c client.Client, servers []irc.Connection) {
+	var message []byte
+	for {
+		select {
+		case message = <-c.Send:
+			servers[0].Rec <- message
+			fmt.Printf("%s\n", message)
+		case message = <-servers[0].Send:
+			c.Rec <- message
+			fmt.Printf("%s\n", message)
 		}
 	}
-
-	// Create case for client response.
-	clientCase := reflect.SelectCase{
-		Dir:  reflect.SelectSend,
-		Chan: reflect.ValueOf(client.Chan)}
-	cases = append(cases, clientCase)
-
 }

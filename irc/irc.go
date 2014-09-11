@@ -4,7 +4,7 @@ package irc
 
 import "../config"
 
-func Connect(conf config.Config, server string) Connection {
+func Connect(conf config.Config, server string, chans []chan []byte) Connection {
 	conn := Connection{
 		Nick: conf.Nick,
 		User: conf.Nick,
@@ -13,7 +13,8 @@ func Connect(conf config.Config, server string) Connection {
 		Socket: nil,
 
 		Events: nil,
-		Chan:   make(chan []byte),
+		Send:   chans[1],
+		Rec:    chans[0],
 	}
 
 	go conn.Connect()

@@ -1,4 +1,4 @@
-package server
+package client
 
 import (
 	"fmt"
@@ -7,11 +7,12 @@ import (
 )
 
 type Client struct {
-	Chan chan []byte
+	Rec  chan []byte
+	Send chan []byte
 }
 
-func Listen() Client {
-	client := Client{Chan: make(chan []byte)}
+func Listen(chans []chan []byte) Client {
+	client := Client{Rec: chans[0], Send: chans[1]}
 
 	ln, err := net.Listen("tcp", ":6665")
 	if err != nil {
@@ -36,6 +37,6 @@ func requestHandler(conn net.Conn, client Client) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	client.Chan <- buf
+	client.Send <- buf
 	conn.Close()
 }

@@ -17,7 +17,8 @@ type Connection struct {
 	Socket net.Conn
 
 	Events []Event
-	Chan   chan []byte
+	Send   chan []byte
+	Rec    chan []byte
 }
 
 func (conn *Connection) Connect() {
@@ -55,7 +56,7 @@ func (conn *Connection) Listen() {
 			break
 		}
 		conn.respondToMessage(line)
-		conn.Chan <- []byte(line)
+		conn.Send <- []byte(line)
 	}
 }
 
