@@ -29,10 +29,10 @@ func main() {
 	splashScreen(args)
 
 	// Main channels
-	toClient := make(chan []byte)
-	toServer := make(chan []byte)
+	toClient := make(chan string, 12)
+	toServer := make(chan string, 12)
 
-	chans := []chan []byte{toClient, toServer}
+	chans := []chan string{toClient, toServer}
 
 	client := client.Listen(chans)
 	var servers []irc.Connection

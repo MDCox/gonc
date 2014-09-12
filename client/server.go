@@ -7,11 +7,11 @@ import (
 )
 
 type Client struct {
-	Rec  chan []byte
-	Send chan []byte
+	Rec  chan string
+	Send chan string
 }
 
-func Listen(chans []chan []byte) Client {
+func Listen(chans []chan string) Client {
 	client := Client{Rec: chans[0], Send: chans[1]}
 
 	ln, err := net.Listen("tcp", ":6665")
@@ -37,6 +37,6 @@ func requestHandler(conn net.Conn, client Client) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	client.Send <- buf
+	client.Send <- string(buf)
 	conn.Close()
 }

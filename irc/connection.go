@@ -17,21 +17,23 @@ type Connection struct {
 	Socket net.Conn
 
 	Events []Event
-	Send   chan []byte
-	Rec    chan []byte
+	Send   chan string
+	Rec    chan string
 }
 
 func (conn *Connection) Connect() {
 	socket, err := net.Dial("tcp", conn.Server)
 	defer socket.Close()
+	fmt.Printf("Connected: %s, %v\n\n", conn.Server, socket)
 	conn.Socket = socket
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
 	conn.SetNick()
+	conn.JoinChan("#bottesting")
 	conn.Listen()
+	fmt.Printf("Listened\n")
 }
 
 func (conn *Connection) SetNick() {
@@ -55,8 +57,11 @@ func (conn *Connection) Listen() {
 			fmt.Println(err)
 			break
 		}
+		fmt.Printf("Listening: %s\n\n", line)
 		conn.respondToMessage(line)
-		conn.Send <- []byte(line)
+		fmt.Println("preline")
+		conn.Send <- line
+		fmt.Println("post send")
 	}
 }
 
