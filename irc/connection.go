@@ -17,8 +17,8 @@ type Connection struct {
 	Socket net.Conn
 
 	Events []Event
-	Send   chan string
-	Rec    chan string
+	Out    chan string
+	In     chan string
 }
 
 func (conn *Connection) Connect() {
@@ -31,9 +31,8 @@ func (conn *Connection) Connect() {
 		return
 	}
 	conn.SetNick()
-	conn.JoinChan("#bottesting")
+	conn.JoinChan("#bottesting2")
 	conn.Listen()
-	fmt.Printf("Listened\n")
 }
 
 func (conn *Connection) SetNick() {
@@ -57,11 +56,8 @@ func (conn *Connection) Listen() {
 			fmt.Println(err)
 			break
 		}
-		fmt.Printf("Listening: %s\n\n", line)
 		conn.respondToMessage(line)
-		fmt.Println("preline")
-		conn.Send <- line
-		fmt.Println("post send")
+		conn.Out <- line
 	}
 }
 

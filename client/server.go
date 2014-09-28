@@ -18,8 +18,10 @@ func Listen(chans []chan string) Client {
 	if err != nil {
 		fmt.Println(err)
 	}
-	go func() {
+	go func(ln net.Listener) {
 		for {
+			incoming := <-client.Rec
+			fmt.Println(incoming)
 			conn, err := ln.Accept()
 			if err != nil {
 				fmt.Println(err)
@@ -27,7 +29,7 @@ func Listen(chans []chan string) Client {
 			}
 			go requestHandler(conn, client)
 		}
-	}()
+	}(ln)
 	return client
 }
 
@@ -37,6 +39,6 @@ func requestHandler(conn net.Conn, client Client) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	client.Send <- string(buf)
+	//client.Send <- string(buf)
 	conn.Close()
 }

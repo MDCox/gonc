@@ -29,8 +29,8 @@ func main() {
 	splashScreen(args)
 
 	// Main channels
-	toClient := make(chan string, 12)
-	toServer := make(chan string, 12)
+	toClient := make(chan string, 512)
+	toServer := make(chan string, 512)
 
 	chans := []chan string{toClient, toServer}
 

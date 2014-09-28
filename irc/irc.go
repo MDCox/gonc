@@ -13,8 +13,8 @@ func Connect(conf config.Config, server string, chans []chan string) Connection 
 		Socket: nil,
 
 		Events: nil,
-		Send:   chans[0],
-		Rec:    chans[1],
+		Out:    chans[0],
+		In:     chans[1],
 	}
 
 	go conn.Connect()
