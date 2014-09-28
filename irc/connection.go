@@ -8,7 +8,6 @@ import (
 )
 
 type Connection struct {
-	// User information
 	Nick string
 	User string
 
@@ -16,9 +15,8 @@ type Connection struct {
 	Server string
 	Socket net.Conn
 
-	Events []Event
-	Out    chan string
-	In     chan string
+	Out chan string
+	In  chan string
 }
 
 func (conn *Connection) Connect() {
@@ -64,8 +62,7 @@ func (conn *Connection) Listen() {
 
 func (conn *Connection) SendToServer(line string) {
 	socket := conn.Socket
-	_, err := socket.Write([]byte(line))
-	//_, err := fmt.Fprint(socket, line)
+	_, err := fmt.Fprint(socket, line)
 	if err != nil {
 		fmt.Println(err)
 	}

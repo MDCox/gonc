@@ -12,9 +12,8 @@ func Connect(conf config.Config, server string, chans []chan string) Connection 
 		Server: server,
 		Socket: nil,
 
-		Events: nil,
-		Out:    chans[0],
-		In:     make(chan string, 512), //chans[1],
+		Out: chans[0],
+		In:  chans[1],
 	}
 
 	go conn.Connect()
