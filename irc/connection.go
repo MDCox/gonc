@@ -22,14 +22,14 @@ type Connection struct {
 }
 
 func (conn *Connection) Connect() {
-	socket, err := net.Dial("tcp", conn.Server)
-	defer socket.Close()
-	fmt.Printf("Connected: %s, %v\n\n", conn.Server, socket)
-	conn.Socket = socket
+	var err error
+	conn.Socket, err = net.Dial("tcp", conn.Server)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	fmt.Printf("Connected: %s, %v\n\n", conn.Server, conn.Socket)
+
 	conn.SetNick()
 	conn.JoinChan("#bottesting2")
 	conn.Listen()
@@ -54,10 +54,20 @@ func (conn *Connection) Listen() {
 		line, err := tp.ReadLine()
 		if err != nil {
 			fmt.Println(err)
+			fmt.Println("BREAKING THE LOOP")
 			break
 		}
 		conn.respondToMessage(line)
 		conn.Out <- line
+	}
+}
+
+func (conn *Connection) SendToServer(line string) {
+	socket := conn.Socket
+	_, err := socket.Write([]byte(line))
+	//_, err := fmt.Fprint(socket, line)
+	if err != nil {
+		fmt.Println(err)
 	}
 }
 

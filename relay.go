@@ -13,6 +13,8 @@ func relay(c client.Client, servers []irc.Connection) {
 		select {
 		case msg = <-servers[0].Out:
 			fmt.Println(msg)
+		case msg = <-c.Out:
+			servers[0].SendToServer(msg)
 		}
 	}
 }

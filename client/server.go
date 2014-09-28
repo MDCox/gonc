@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"net"
 	"os"
+
+	"bufio"
 )
 
 type Client struct {
-	Rec  chan string
-	Send chan string
+	Socket net.Conn
+	In     chan string
+	Out    chan string
 }
 
 func Listen(chans []chan string) Client {
-	client := Client{Rec: chans[0], Send: chans[1]}
+	client := Client{In: chans[0], Out: chans[1]}
 
 	ln, err := net.Listen("tcp", ":6665")
 	if err != nil {
@@ -20,13 +23,13 @@ func Listen(chans []chan string) Client {
 	}
 	go func(ln net.Listener) {
 		for {
-			incoming := <-client.Rec
-			fmt.Println(incoming)
 			conn, err := ln.Accept()
 			if err != nil {
 				fmt.Println(err)
+				fmt.Println("EXITING")
 				os.Exit(1)
 			}
+			client.Socket = conn
 			go requestHandler(conn, client)
 		}
 	}(ln)
@@ -34,11 +37,12 @@ func Listen(chans []chan string) Client {
 }
 
 func requestHandler(conn net.Conn, client Client) {
-	buf := []byte{}
-	_, err := conn.Read(buf)
-	if err != nil {
-		fmt.Println(err)
+	reader := bufio.NewScanner(conn)
+	for reader.Scan() {
+		input := reader.Text()
+		fmt.Println(input)
+		client.Out <- input
 	}
-	//client.Send <- string(buf)
-	conn.Close()
+
+	//conn.Close()
 }
